@@ -56,11 +56,12 @@ public class User implements UserDetails
     public User() {
     }
 
-    public User(String firstName, String lastName, String email, String password) {
+    public User(String firstName, String lastName, String email, String password, Role role) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.role = role;
     }
 
     public int getId() {
@@ -106,7 +107,7 @@ public class User implements UserDetails
 
     @Override
     public String getUsername() {
-        return this.firstName+this.lastName;
+        return this.email;
     }
 
     @Override
@@ -131,6 +132,14 @@ public class User implements UserDetails
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 
     public List<Note> getNotes() {

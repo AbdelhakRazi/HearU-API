@@ -39,7 +39,7 @@ public class ApplicationConfig {
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
-    @Bean
+    @Bean // we're using bean to allow return a singleton everytime it's called
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }

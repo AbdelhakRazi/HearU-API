@@ -18,25 +18,29 @@ public class AuthenticationService {
     private JwtService jwtService;
     private AuthenticationManager authenticationManager;
     @Autowired
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
+        this.authenticationManager = authenticationManager;
     }
 
     public AuthenticationResponse authenticate(AuthenticateRequest authenticateRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                authenticateRequest.getEmail(),
-                authenticateRequest.getPassword()
+                authenticateRequest.email(),
+                authenticateRequest.password()
         ));
-        // if success, generate token and send it back
-        var user = userRepository.findByEmail(authenticateRequest.getEmail()).orElseThrow();
+        var user = userRepository.findByEmail(authenticateRequest.email()).orElseThrow();
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        User user = new User(registerRequest.getFirstName(), registerRequest.getLastName(), registerRequest.getEmail(), registerRequest.getPassword());
+        User user = new User(registerRequest.first_name(),
+                registerRequest.last_name(),
+                registerRequest.email(),
+                passwordEncoder.encode(registerRequest.password()),
+                registerRequest.role());
         userRepository.save(user);
         var jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
