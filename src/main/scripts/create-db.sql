@@ -30,6 +30,7 @@ CREATE TABLE notes (
     id SERIAL PRIMARY KEY,
     user_id int NOT NULL,
     folder_id int,
+    title VARCHAR(128),
     content TEXT NOT NULL,
     audio_path TEXT NOT NULL,
     audio_length REAL NOT NULL,

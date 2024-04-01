@@ -9,4 +9,5 @@ import java.util.Optional;
 @RepositoryRestResource(path = "users")
 public interface UserRepository extends JpaRepository<User, Integer> {
     Optional<User> findByEmail(String email); // useful for defining when retrieving user first
+
 }
