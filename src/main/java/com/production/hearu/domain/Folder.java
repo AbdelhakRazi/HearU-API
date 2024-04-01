@@ -1,4 +1,4 @@
-package com.production.heard.domain;
+package com.production.hearu.domain;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;

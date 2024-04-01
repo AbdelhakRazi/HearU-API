@@ -1,6 +1,6 @@
-package com.production.heard.repository;
+package com.production.hearu.repository;
 
-import com.production.heard.domain.Folder;
+import com.production.hearu.domain.Folder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
