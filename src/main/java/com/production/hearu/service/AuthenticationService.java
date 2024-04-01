@@ -5,44 +5,41 @@ import com.production.hearu.auth.AuthenticationResponse;
 import com.production.hearu.auth.RegisterRequest;
 import com.production.hearu.domain.User;
 import com.production.hearu.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class AuthenticationService {
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
-    private JwtService jwtService;
-    private AuthenticationManager authenticationManager;
-    @Autowired
-    public AuthenticationService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService, AuthenticationManager authenticationManager) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtService = jwtService;
-        this.authenticationManager = authenticationManager;
-    }
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtService jwtService;
+    private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse authenticate(AuthenticateRequest authenticateRequest) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 authenticateRequest.email(),
                 authenticateRequest.password()
         ));
-        var user = userRepository.findByEmail(authenticateRequest.email()).orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        User user = userRepository.findByEmail(authenticateRequest.email()).orElseThrow();
+        String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 
     public AuthenticationResponse register(RegisterRequest registerRequest) {
-        User user = new User(registerRequest.first_name(),
-                registerRequest.last_name(),
-                registerRequest.email(),
-                passwordEncoder.encode(registerRequest.password()),
-                registerRequest.role());
+        User user = User
+                .builder()
+                .firstName(registerRequest.first_name())
+                .lastName(registerRequest.last_name())
+                .email(registerRequest.email())
+                .password(passwordEncoder.encode(registerRequest.password()))
+                .role(registerRequest.role())
+                .build();
         userRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        String jwtToken = jwtService.generateToken(user);
         return new AuthenticationResponse(jwtToken);
     }
 }

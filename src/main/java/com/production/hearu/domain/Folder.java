@@ -9,11 +9,17 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 @Entity
 @Table(name = "folders")
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class Folder {
     @Column(name = "id")
     @Id
@@ -30,44 +36,4 @@ public class Folder {
     // note is only in folder: delete
     @JoinColumn(name = "folder_id", referencedColumnName = "id")
     private List<Note> notes;
-
-    public Folder() {
-    }
-
-    public Folder(String name) {
-        this.name = name;
-    }
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Note> getNotes() {
-        return notes;
-    }
-
-    public void setNotes(List<Note> notes) {
-        this.notes = notes;
-    }
-
-    @Override
-    public String toString() {
-        return "Folder{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", notes=" + notes +
-                '}';
-    }
 }
