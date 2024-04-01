@@ -1,6 +1,6 @@
 package com.production.hearu.auth;
 
-public class RegisterRequest {
+public class RegisterRequest {// refactor to use records
     private String firstName;
     private String lastName;
     private String email;

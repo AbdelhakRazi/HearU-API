@@ -1,10 +1,11 @@
 -- Insert random data into users table
-INSERT INTO users (first_name, last_name, email, password)
+INSERT INTO users (first_name, last_name, email, password, role)
 SELECT
     CONCAT('First', id),
     CONCAT('Last', id),
     CONCAT('email', id, '@example.com'),
-    CONCAT('password', id)
+    CONCAT('password', id),
+    'USER'
 FROM generate_series(1, 10) as id;
 
 -- Insert random data into folders table

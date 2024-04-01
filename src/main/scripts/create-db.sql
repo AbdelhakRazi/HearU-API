@@ -9,7 +9,8 @@ CREATE TABLE users (
     first_name VARCHAR(128),
     last_name VARCHAR(128),
     email VARCHAR(128),
-    password VARCHAR(128)
+    password VARCHAR(128),
+    role VARCHAR(128)
 );
 -- Table: folders
 CREATE TABLE folders (

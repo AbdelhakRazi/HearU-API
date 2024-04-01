@@ -50,7 +50,8 @@ public class User implements UserDetails
             inverseJoinColumns = @JoinColumn(name="folder_id")
     )
     private List<Folder> folder;
-    @Enumerated(EnumType.ORDINAL) // 1 2 3 , in this case user can have only one role
+    @Enumerated(EnumType.STRING) // 1 2 3 , in this case user can have only one role
+    @Column(name = "role")
     private Role role;
     public User() {
     }

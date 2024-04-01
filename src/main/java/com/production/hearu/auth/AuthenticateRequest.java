@@ -1,6 +1,6 @@
 package com.production.hearu.auth;
 
-public class AuthenticateRequest {
+public class AuthenticateRequest { // refactor to use records
     private String email;
     private String password;
 
