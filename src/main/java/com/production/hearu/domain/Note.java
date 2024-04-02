@@ -13,13 +13,14 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "notes")
 public class Note {
     @Column(name = "id")
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+    @Column(name = "title")
+    private String title;
     @Column(name = "content")
     private String content;
     @Column(name = "audio_path")
@@ -28,4 +29,8 @@ public class Note {
     private double audioLength;
     @Column(name ="saved")
     private boolean saved;
+    @Column(name = "user_id")
+    private int userId;
+    @Column(name= "folder_id")
+    private Integer folderId;
 }

@@ -47,18 +47,16 @@ public class User implements UserDetails
     private String email;
     @Column(name = "password")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL) // uni-directional , and apply cascading rules since when we delete a user, it's corresponding notes should be deleted
+    // uni-directional , and apply cascading rules since when we delete a user, it's corresponding notes should be deleted
     // PERSIST, means saved, when we save it, related will be saved, same case for deleted and refresh
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<Note> notes;
-    @ManyToMany(fetch = FetchType.LAZY,
+    /*@ManyToMany(fetch = FetchType.LAZY,
             cascade = {CascadeType.PERSIST, CascadeType.MERGE,
                     CascadeType.DETACH, CascadeType.REFRESH})    @JoinTable(
             name = "users_folders",
             joinColumns = @JoinColumn(name="user_id"),
             inverseJoinColumns = @JoinColumn(name="folder_id")
     )
-    private List<Folder> folder;
+    private List<Folder> folder;*/
     @Enumerated(EnumType.STRING) // 1 2 3 , in this case user can have only one role
     @Column(name = "role", insertable = false)
     private Role role;
@@ -95,16 +93,5 @@ public class User implements UserDetails
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", notes=" + notes +
-                '}';
     }
 }
