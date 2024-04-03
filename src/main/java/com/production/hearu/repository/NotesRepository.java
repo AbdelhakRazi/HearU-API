@@ -8,6 +8,7 @@ import java.util.List;
 
 @Repository
 public interface NotesRepository extends JpaRepository<Note, Integer> {
-    List<Note> findByUserIdAndFolderIdIsNull(int userId);
-    List<Note> findByUserIdAndFolderId(int userId, int folderId);
+   List<Note> findByUserIdAndFolderIdIsNull(int userId);
+   //Note saveByFolderId(Note note, int folderId);
+   List<Note> findByUserIdAndFolderId(int userId, int folderId);
 }
