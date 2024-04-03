@@ -13,6 +13,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -24,13 +25,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 @Entity
 @Builder
 @NoArgsConstructor
-@AllArgsConstructor()
+@AllArgsConstructor
 @Data
 @Table(name = "users")
 public class User implements UserDetails
@@ -47,22 +49,9 @@ public class User implements UserDetails
     private String email;
     @Column(name = "password")
     private String password;
-    @OneToMany(cascade = CascadeType.ALL) // uni-directional , and apply cascading rules since when we delete a user, it's corresponding notes should be deleted
-    // PERSIST, means saved, when we save it, related will be saved, same case for deleted and refresh
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    private List<Note> notes;
-    @ManyToMany(fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE,
-                    CascadeType.DETACH, CascadeType.REFRESH})    @JoinTable(
-            name = "users_folders",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="folder_id")
-    )
-    private List<Folder> folder;
     @Enumerated(EnumType.STRING) // 1 2 3 , in this case user can have only one role
     @Column(name = "role", insertable = false)
     private Role role;
-    // should return a list of roles that are accessible by user
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
@@ -95,16 +84,5 @@ public class User implements UserDetails
     @Override
     public boolean isEnabled() {
         return true;
-    }
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", firstName='" + firstName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", email='" + email + '\'' +
-                ", password='" + password + '\'' +
-                ", notes=" + notes +
-                '}';
     }
 }
