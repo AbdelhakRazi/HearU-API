@@ -3,9 +3,14 @@ package com.production.hearu.controller;
 import com.production.hearu.domain.Folder;
 import com.production.hearu.domain.Note;
 import com.production.hearu.domain.User;
+import com.production.hearu.exceptions.RessourceNotFoundException;
 import com.production.hearu.repository.FolderRepository;
 import com.production.hearu.repository.NotesRepository;
+import com.production.hearu.repository.UserRepository;
+import io.jsonwebtoken.impl.security.EdwardsCurve;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,37 +31,73 @@ import java.util.Optional;
 public class FoldersController {
     private final NotesRepository notesRepository;
     private final FolderRepository folderRepository;
+    private final UserRepository userRepository;
+
     @GetMapping("")
-    public List<Folder> getFolders(Principal connectedUser){
+    public ResponseEntity<List<Folder>> getFolders(Principal connectedUser){
         User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        return folderRepository.findByUsersId(user.getId());
-    }
-    @GetMapping("/{folderId}/notes")
-    public List<Note> getFolderNotes(@PathVariable int folderId, Principal connectedUser){
-        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        return notesRepository.findByUserIdAndFolderId(user.getId(), folderId);
+        List<Folder> folderList = folderRepository.findByUsersId(user.getId());
+        if (folderList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(folderList, HttpStatus.OK);
     }
     @PostMapping("")
-    public Folder createFolder(@RequestBody Folder folder, Principal connectedUser){
+    public ResponseEntity<Folder> createFolder(@RequestBody Folder folder, Principal connectedUser) throws RessourceNotFoundException {
         User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        // I think retrieve user entity and add the folder :P
-        return folderRepository.saveByUsersId(folder, user.getId());
+        User savedUser = userRepository
+                .findById(user.getId())
+                .orElseThrow(() -> new RessourceNotFoundException(
+                        String.format("User with id %s is not found", user.getId())));
+        folder.addUser(savedUser);
+        Folder savedFolder = folderRepository.save(folder);
+        return new ResponseEntity<>(savedFolder, HttpStatus.CREATED);
+
     }
-    /*@PostMapping("/{folderId}/notes")
-    public Note createFolderNote(@RequestBody Note note, @PathVariable int folderId, Principal connectedUser) {
-        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        return notesRepository.saveByFolderId(note, folderId);
-    }
-    @PutMapping("")
-    public Folder updateFolder(@RequestBody Folder folder){
-        return folderRepository.save(folder);
+    @PutMapping("/{folderId}")
+    public ResponseEntity<Folder> updateFolder(@PathVariable int folderId, @RequestBody Folder folderRequest)
+            throws RessourceNotFoundException {
+        Folder folder = folderRepository
+                .findById(folderId)
+                .orElseThrow(() -> new RessourceNotFoundException(
+                        String.format("Folder with id %s is not found", folderId)));
+        folder.setName(folderRequest.getName());
+        Folder savedFolder = folderRepository.save(folder);
+        return new ResponseEntity<>(savedFolder, HttpStatus.OK);
     }
     @DeleteMapping("{folderId}")
-    public void deleteFolder(@PathVariable int folderId, Principal connectedUser){
-        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
-        Optional<Folder> folder =  folderRepository.findById(folderId);
-        folder.ifPresent(folderRepository::delete);
+    public ResponseEntity<HttpStatus> deleteFolder(@PathVariable int folderId) throws RessourceNotFoundException {
+        Folder folder = folderRepository
+                .findById(folderId)
+                .orElseThrow(() -> new RessourceNotFoundException(
+                        String.format("Folder with id %s is not found", folderId)));
+        folderRepository.delete(folder);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
-
-   */
+    @GetMapping("/{folderId}/notes")
+    public ResponseEntity<List<Note>> getFolderNotes(@PathVariable int folderId, Principal connectedUser){
+        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        List<Note> noteList = notesRepository.findByUserIdAndFolderId(user.getId(), folderId);
+        if (noteList.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(noteList, HttpStatus.OK);
+    }
+    @PostMapping("/{folderId}/notes")
+    public ResponseEntity<Note> createFolderNote(@PathVariable int folderId, @RequestBody Note note, Principal connectedUser)
+            throws RessourceNotFoundException {
+        User user = (User) ((UsernamePasswordAuthenticationToken) connectedUser).getPrincipal();
+        User savedUser = userRepository
+                .findById(user.getId())
+                .orElseThrow(() -> new RessourceNotFoundException(
+                        String.format("User with id %s is not found", user.getId())));
+        Folder folder = folderRepository
+                .findById(folderId)
+                .orElseThrow(() -> new RessourceNotFoundException(
+                        String.format("Folder with id %s is not found", folderId)));
+        note.setUser(savedUser);
+        note.setFolder(folder);
+        Note savedNote = notesRepository.save(note);
+        return new ResponseEntity<>(savedNote, HttpStatus.CREATED);
+    }
 }

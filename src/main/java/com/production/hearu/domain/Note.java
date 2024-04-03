@@ -46,7 +46,7 @@ public class Note {
     @JsonIgnore
     private User user;
     @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    @JoinColumn(name = "folder_id", nullable = false)
+    @JoinColumn(name = "folder_id")
     @JsonIgnore
     private Folder folder;
 }

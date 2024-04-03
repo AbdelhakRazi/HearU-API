@@ -9,6 +9,4 @@ import java.util.List;
 @Repository
 public interface FolderRepository extends JpaRepository<Folder, Integer> {
     List<Folder> findByUsersId(int userId);
-
-    Folder saveByUsersId(Folder folder, int id);
 }
