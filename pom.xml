@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.production</groupId>
-	<artifactId>heard</artifactId>
+	<artifactId>hearu-backend-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>heard</name>
 	<description>REST API for HearU</description>
