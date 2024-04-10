@@ -7,7 +7,6 @@ import com.production.hearu.exceptions.RessourceNotFoundException;
 import com.production.hearu.repository.FolderRepository;
 import com.production.hearu.repository.NotesRepository;
 import com.production.hearu.repository.UserRepository;
-import io.jsonwebtoken.impl.security.EdwardsCurve;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
