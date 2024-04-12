@@ -1,0 +1,9 @@
+FROM postgres:latest
+
+# Environment variables
+ENV POSTGRES_DB=hearu
+ENV POSTGRES_USER=postgres
+ENV POSTGRES_PASSWORD=root
+
+# Copy SQL scripts to initialize the database schema
+COPY src/main/postgres/init.sql /docker-entrypoint-initdb.d/
