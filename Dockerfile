@@ -1,10 +1,10 @@
-FROM eclipse-temurin:17-jdk-alpine
+FROM eclipse-temurin:latest
 
 VOLUME /tmp
 
-ENV JAVA_OPTS " -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
+ENV JAVA_OPTS=" -Xms512m -Xmx512m -Djava.security.egd=file:/dev/./urandom"
 
-WORKDIR application
+WORKDIR app
 
 COPY ./target/*.jar app.jar
 
