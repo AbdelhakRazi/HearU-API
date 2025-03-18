@@ -1,9 +1,6 @@
 name: Dependabot Update
 
 on:
-  push:
-    branches:
-      - main # or whatever branch you want to trigger the workflow on
   workflow_dispatch: # This allows manual triggering of the workflow
   
 jobs:
