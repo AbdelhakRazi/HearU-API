@@ -1,17 +1,23 @@
-name: Renovate Bot
+name: Run Renovate
 
 on:
-  workflow_dispatch: # Allows manual triggering from GitHub Actions UI
+  workflow_dispatch:  # This triggers the workflow manually (you'll trigger it from GitHub UI)
+
 jobs:
   renovate:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
 
-      - name: Run Renovate
-        uses: renovatebot/github-action@v41.0.16
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Renovate
+        uses: renovatebot/github-action@v37.440.7
         with:
-          token: ${{ secrets.RENOVATE_TOKEN }}
+          token: ${{ secrets.RENOVATE_TOKEN }}  # Uses the token you stored in GitHub Secrets
+          
+      - name: Run Renovate
+        run: |
+          renovate --config-file ./renovate.json  # Optional if you have custom configuration
 
 
