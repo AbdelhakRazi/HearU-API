@@ -14,4 +14,4 @@ jobs:
         with:
           docker-cmd-file: .github/renovate-entrypoint.sh
           docker-user: root
-          token: $RENOVATE_TOKEN
+          token: ${{ secret.RENOVATE_TOKEN }}
