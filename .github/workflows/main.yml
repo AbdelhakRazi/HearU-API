@@ -2,19 +2,16 @@ name: Dependabot Update
 
 on:
   workflow_dispatch: # This allows manual triggering of the workflow
-  
+
 jobs:
-  dependabot-update:
+  renovate:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v2
-
-      - name: Setup Dependabot
-        uses: dependabot/fetch-metadata@v1
-
-      - name: Run Dependabot
-        run: |
-          git config --global user.name "dependabot"
-          git config --global user.email "dependabot@github.com"
-          dependabot update
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+      - name: Self-hosted Renovate
+        uses: renovatebot/github-action@v41.0.15
+        with:
+          docker-cmd-file: .github/renovate-entrypoint.sh
+          docker-user: root
+          token: ${{ secrets.RENOVATE_TOKEN }}
