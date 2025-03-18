@@ -1,0 +1,8 @@
+{
+  "platform": "github",
+  "onboardingConfig": {
+    "extends": ["config:base"]
+  },
+  "repositories": ["AbdelhakRazi/HearU-API"],
+  "autodiscover": true,
+}
