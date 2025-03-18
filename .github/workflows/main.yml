@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Set up Renovate
-        uses: renovatebot/github-action@v37.440.7
+        uses: renovatebot/github-action@v41.0.16
         with:
           token: ${{ secrets.RENOVATE_TOKEN }}  # Uses the token you stored in GitHub Secrets
           
