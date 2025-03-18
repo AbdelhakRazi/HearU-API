@@ -4,5 +4,5 @@
     "extends": ["config:base"]
   },
   "repositories": ["AbdelhakRazi/HearU-API"],
-  "autodiscover": true,
+  "autodiscover": "true"
 }
