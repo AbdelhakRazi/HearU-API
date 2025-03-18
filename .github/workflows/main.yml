@@ -1,61 +1,23 @@
-name: Manual Dependabot Update
+name: Dependabot Update
 
 on:
-  workflow_dispatch:
-    inputs:
-      package_ecosystem:
-        description: 'Type of dependencies to update'
-        required: true
-        default: 'npm'
-        type: choice
-        options:
-          - npm
-          - maven
-          - pip
-          - bundler
-          - cargo
-          - composer
-          - nuget
-          - gradle
-          - gomod
-          - docker
-      directory:
-        description: 'Directory with dependency files'
-        required: true
-        default: '/'
-        type: string
-      dependency_name:
-        description: 'Specific dependency to update (optional)'
-        required: false
-        type: string
-
+  push:
+    branches:
+      - main # or whatever branch you want to trigger the workflow on
+  workflow_dispatch: # This allows manual triggering of the workflow
+  
 jobs:
-  trigger-dependabot:
+  dependabot-update:
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-      pull-requests: write
-      
     steps:
-      - name: Trigger Dependabot update
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Dependabot
+        uses: dependabot/fetch-metadata@v1
+
+      - name: Run Dependabot
         run: |
-          if [ -z "${{ inputs.dependency_name }}" ]; then
-            echo "Triggering Dependabot for all ${{ inputs.package_ecosystem }} dependencies in ${{ inputs.directory }}"
-            gh api \
-              --method POST \
-              repos/${{ github.repository }}/dependabot/updates \
-              -f package-ecosystem="${{ inputs.package_ecosystem }}" \
-              -f directory="${{ inputs.directory }}" \
-              -f vendor=false
-          else
-            echo "Triggering Dependabot for ${{ inputs.dependency_name }} in ${{ inputs.package_ecosystem }}"
-            gh api \
-              --method POST \
-              repos/${{ github.repository }}/dependabot/updates \
-              -f package-ecosystem="${{ inputs.package_ecosystem }}" \
-              -f directory="${{ inputs.directory }}" \
-              -f dependency-name="${{ inputs.dependency_name }}" \
-              -f vendor=false
-          fi
+          git config --global user.name "dependabot"
+          git config --global user.email "dependabot@github.com"
+          dependabot update
