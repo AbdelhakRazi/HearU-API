@@ -1,2 +1,16 @@
-- name: Renovate Bot GitHub Action
-  uses: renovatebot/github-action@v41.0.16
+name: Renovate Bot
+
+on:
+  workflow_dispatch: # Allows manual triggering from GitHub Actions UI
+jobs:
+  renovate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Renovate
+        uses: renovatebot/github-action@v41.0.16
+        with:
+          token: ${{ secrets.RENOVATE_TOKEN }}
+
