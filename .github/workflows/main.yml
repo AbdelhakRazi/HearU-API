@@ -1,8 +1,6 @@
-name: Update deps
-
+name: Renovate
 on:
-  workflow_dispatch: # This allows manual triggering of the workflow
-
+  workflow_dispatch:
 jobs:
   renovate:
     runs-on: ubuntu-latest
@@ -12,6 +10,5 @@ jobs:
       - name: Self-hosted Renovate
         uses: renovatebot/github-action@v41.0.15
         with:
-          docker-cmd-file: .github/renovate-entrypoint.sh
-          docker-user: root
+          configurationFile: example/renovate-config.js
           token: ${{ secrets.RENOVATE_TOKEN }}
