@@ -1,16 +1,18 @@
-name: Trigger Dependabot Manually
+name: Manual Dependabot Trigger
 
 on:
-  workflow_dispatch:  # Allows manual trigger
+  workflow_dispatch:  # Allows manual execution
 
 jobs:
   trigger-dependabot:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Required to update dependencies
+      pull-requests: write  # Required to create PRs
+
     steps:
-      - name: Trigger Dependabot
-        run: |
-          curl -X POST \
-            -H "Accept: application/vnd.github.v3+json" \
-            -H "Authorization: token ${{ secrets.DEPENDABOT_PAT }}" \
-            https://api.github.com/repos/${{ github.repository }}/dependabot/updates
+      - name: Run Dependabot
+        uses: github/dependabot-action@main
+        env:
+          GITHUB_TOKEN: ${{ secrets.DEPENDABOT_PAT }}
 
